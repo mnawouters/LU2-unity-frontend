@@ -23,7 +23,6 @@ public class WorldManager : MonoBehaviour
     [Header("Screens")]
     public GameObject WorldSelectionScene;
     public GameObject CurrentWorld;
-    public GameObject BackButton;
     public Environment2DApiClient environment2DApiClient;
 
     [Header("Settings")]

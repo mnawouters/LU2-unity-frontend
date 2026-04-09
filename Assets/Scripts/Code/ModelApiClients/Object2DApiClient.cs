@@ -33,16 +33,6 @@ public class Object2DApiClient : MonoBehaviour
         return await webClient.SendPutRequest(route, data);
     }
 
-    // New: delete an Object2D by environment id + object id
-    public async Awaitable<IWebRequestReponse> DeleteObject2D(string environmentId, string objectId)
-    {
-        if (string.IsNullOrEmpty(environmentId) || string.IsNullOrEmpty(objectId))
-            return new WebRequestError("Missing environmentId or objectId for delete.");
-
-        string route = "/environments/" + environmentId + "/objects/" + objectId;
-        return await webClient.SendDeleteRequest(route);
-    }
-
     private IWebRequestReponse ParseObject2DResponse(IWebRequestReponse webRequestResponse)
     {
         switch (webRequestResponse)

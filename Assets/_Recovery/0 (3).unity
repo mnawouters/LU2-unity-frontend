@@ -6281,7 +6281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42911dd8fa5bd5248879be067db4fe5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnYellowScript
-  Yellow: {fileID: 1496559620944240029, guid: 35a2254bc47dd3f4ba3cb73356a07281, type: 3}
+  Yellow: {fileID: 8579113792585539109, guid: 54aa9f6e34e5e8d45995fd7121ce5c9d, type: 3}
   prefabID: 2
 --- !u!114 &1173620655
 MonoBehaviour:
@@ -6295,7 +6295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf84eea6c6de61445bd42b7c6717f201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnRedScript
-  Red: {fileID: 1298181684980890753, guid: c893c3a7345ffcc45bc40e2144d2b6cf, type: 3}
+  Red: {fileID: 4078970506828161151, guid: b843308489c9407499aba10f7d7ead4b, type: 3}
   prefabID: 1
 --- !u!114 &1173620656
 MonoBehaviour:
@@ -6309,7 +6309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76957143c9fb9244dbb09782d1376997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPigScript
-  Pig: {fileID: 9077824290335447184, guid: 91dbabd71fb0d93478c55ae0fd59dc80, type: 3}
+  Pig: {fileID: 5520071132376706793, guid: 91dbabd71fb0d93478c55ae0fd59dc80, type: 3}
   prefabID: 0
 --- !u!1 &1175166298
 GameObject:
@@ -7985,7 +7985,7 @@ Transform:
   m_GameObject: {fileID: 1532479013}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 810.3981, y: 480.7529, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -39,15 +39,42 @@ public class WebClient : MonoBehaviour
 
     private UnityWebRequest CreateWebRequest(string type, string route, string data)
     {
-        string url = baseUrl + route;
+        // combine baseUrl and route safely
+        string url = string.IsNullOrEmpty(route)
+            ? baseUrl
+            : baseUrl.TrimEnd('/') + "/" + route.TrimStart('/');
+
         Debug.Log("Creating " + type + " request to " + url + " with data: " + data);
 
-        data = RemoveIdFromJson(data); // Backend throws error if it receiving empty strings as a GUID value.
-        var webRequest = new UnityWebRequest(url, type);
-        byte[] dataInBytes = new UTF8Encoding().GetBytes(data);
-        webRequest.uploadHandler = new UploadHandlerRaw(dataInBytes);
-        webRequest.downloadHandler = new DownloadHandlerBuffer();
-        webRequest.SetRequestHeader("Content-Type", "application/json");
+        UnityWebRequest webRequest;
+
+        if (type == "GET")
+        {
+            webRequest = UnityWebRequest.Get(url);
+        }
+        else if (type == "DELETE")
+        {
+            // Use UnityWebRequest.Delete and do NOT attach an upload handler/body
+            webRequest = UnityWebRequest.Delete(url);
+        }
+        else
+        {
+            webRequest = new UnityWebRequest(url, type);
+
+            // only attach body for POST/PUT when data is present
+            if (!string.IsNullOrEmpty(data))
+            {
+                byte[] dataInBytes = new UTF8Encoding().GetBytes(data);
+                webRequest.uploadHandler = new UploadHandlerRaw(dataInBytes);
+                webRequest.SetRequestHeader("Content-Type", "application/json");
+            }
+        }
+
+        // ensure download handler exists for all methods
+        if (webRequest.downloadHandler == null)
+            webRequest.downloadHandler = new DownloadHandlerBuffer();
+
+        webRequest.SetRequestHeader("Accept", "application/json");
         AddToken(webRequest);
         return webRequest;
     }
@@ -56,13 +83,19 @@ public class WebClient : MonoBehaviour
     {
         await webRequest.SendWebRequest();
 
-        switch (webRequest.result)
+        long statusCode = webRequest.responseCode;
+        string responseBody = webRequest.downloadHandler != null ? webRequest.downloadHandler.text : string.Empty;
+        string logMsg = $"Request {webRequest.method} {webRequest.url} => status {statusCode}, result {webRequest.result}";
+
+        if (webRequest.result == UnityWebRequest.Result.Success)
         {
-            case UnityWebRequest.Result.Success:
-                string responseData = webRequest.downloadHandler.text;
-                return new WebRequestData<string>(responseData);
-            default:
-                return new WebRequestError(webRequest.error + " | " + webRequest.downloadHandler.text);
+            Debug.Log(logMsg + " - body: " + responseBody);
+            return new WebRequestData<string>(responseBody);
+        }
+        else
+        {
+            Debug.LogWarning(logMsg + " - error: " + webRequest.error + " - body: " + responseBody);
+            return new WebRequestError($"{webRequest.error} | status: {statusCode} | body: {responseBody}");
         }
     }
 
