@@ -9,7 +9,6 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 public class LoginScript : MonoBehaviour
 {
     public GameObject InlogScene;
-    public GameObject RegisterScene;
     public GameObject WereldSelect;
     public GameObject StartScreen;
     public TMP_InputField UsernameInput;
@@ -18,12 +17,6 @@ public class LoginScript : MonoBehaviour
     private string UserWachtwoord;
     public UserApiClient UserAPI;
     public TMP_Text InlogErrorTekst;
-
-    public void Register()
-    {
-        InlogScene.SetActive(false);
-        RegisterScene.SetActive(true);
-    }
 
     public void BackToStartScreen()
     {

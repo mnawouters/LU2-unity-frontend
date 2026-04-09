@@ -27,8 +27,6 @@ public class RegisterScript : MonoBehaviour
             Debug.Log("Register succes!");
             RegisterComplete.SetActive(true);
             RegisterError.SetActive(false);
-            RegisterScene.SetActive(false);
-            StartScreen.SetActive(true);
         }
         else if (webRequestResponse is WebRequestError errorResponse)
         {
