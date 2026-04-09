@@ -8,6 +8,7 @@ public static class JsonHelper
     public static readonly JsonSerializerSettings CamelCaseSettings = new JsonSerializerSettings()
     {
         ContractResolver = new CamelCasePropertyNamesContractResolver(),
+        NullValueHandling = NullValueHandling.Ignore
     };
 
     public static string ExtractToken(string data)

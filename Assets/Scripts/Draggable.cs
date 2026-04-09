@@ -176,7 +176,6 @@ public class Draggable : MonoBehaviour
             if (dataResponse.Data != null)
             {
                 objectData.Id = dataResponse.Data.Id;
-                objectData.GUID = dataResponse.Data.GUID;
                 objectData.EnvironmentId = dataResponse.Data.EnvironmentId;
             }
         }

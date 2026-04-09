@@ -9,7 +9,7 @@ public class Object2DApiClient : MonoBehaviour
 
     public async Awaitable<IWebRequestReponse> ReadObject2Ds(string environmentId)
     {
-        string route = "/environments/" + environmentId + "/objects";
+        string route = "/object/environment/" + environmentId;
 
         IWebRequestReponse webRequestResponse = await webClient.SendGetRequest(route);
         return ParseObject2DListResponse(webRequestResponse);
@@ -17,7 +17,7 @@ public class Object2DApiClient : MonoBehaviour
 
     public async Awaitable<IWebRequestReponse> CreateObject2D(Object2D object2D)
     {
-        string route = "/environments/" + object2D.EnvironmentId + "/objects";
+        string route = "/object";
         string data = JsonConvert.SerializeObject(object2D, JsonHelper.CamelCaseSettings);
 
         IWebRequestReponse webRequestResponse = await webClient.SendPostRequest(route, data);
@@ -26,10 +26,16 @@ public class Object2DApiClient : MonoBehaviour
 
     public async Awaitable<IWebRequestReponse> UpdateObject2D(Object2D object2D)
     {
-        string route = "/environments/" + object2D.EnvironmentId + "/objects/" + object2D.Id;
+        string route = "/object/" + object2D.Id;
         string data = JsonConvert.SerializeObject(object2D, JsonHelper.CamelCaseSettings);
 
         return await webClient.SendPutRequest(route, data);
+    }
+
+    public async Awaitable<IWebRequestReponse> DeleteObject2D(string environmentId, string objectId)
+    {
+        string route = "/object/" + objectId;
+        return await webClient.SendDeleteRequest(route);
     }
 
     private IWebRequestReponse ParseObject2DResponse(IWebRequestReponse webRequestResponse)
@@ -52,8 +58,8 @@ public class Object2DApiClient : MonoBehaviour
         {
             case WebRequestData<string> data:
                 Debug.Log("Response data raw: " + data.Data);
-                List<Object2D> environments = JsonConvert.DeserializeObject<List<Object2D>>(data.Data);
-                WebRequestData<List<Object2D>> parsedData = new WebRequestData<List<Object2D>>(environments);
+                List<Object2D> objects = JsonConvert.DeserializeObject<List<Object2D>>(data.Data);
+                WebRequestData<List<Object2D>> parsedData = new WebRequestData<List<Object2D>>(objects);
                 return parsedData;
             default:
                 return webRequestResponse;

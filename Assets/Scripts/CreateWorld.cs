@@ -11,6 +11,7 @@ public class CreateWorld : MonoBehaviour
     public Environment2DApiClient EnviromentAPI;
     public GameObject createWorld;
     public GameObject SelectWorldMenu;
+    public TMP_Text ErrorText;
 
     public async void CreateEnvironment2D()
     {
@@ -27,14 +28,18 @@ public class CreateWorld : MonoBehaviour
         if (webRequestResponse is WebRequestData<Environment2D> dataResponse)
         {
             NieuweEnviroment.Id = dataResponse.Data.Id;
+            if (ErrorText != null) ErrorText.gameObject.SetActive(false);
             createWorld.SetActive(false);
             SelectWorldMenu.SetActive(true);
         }
         else if (webRequestResponse is WebRequestError errorResponse)
         {
-            string errorMessage = errorResponse.ErrorMessage;
-            Debug.Log("Create environment2D error: " + errorMessage);
-            // TODO: Handle error scenario. Show the errormessage to the user.
+            Debug.Log("Create environment2D error: " + errorResponse.ErrorMessage);
+            if (ErrorText != null)
+            {
+                ErrorText.text = "Fout: naam, hoogte (10-100) en breedte (10-200) zijn verplicht.";
+                ErrorText.gameObject.SetActive(true);
+            }
         }
         else
         {

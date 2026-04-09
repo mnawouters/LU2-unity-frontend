@@ -13,6 +13,7 @@ public class SpawnPigScript : MonoBehaviour
         {
             EnvironmentId = WorldManager.Instance.CurrentWorldId,
             PrefabID = prefabID,
+            ObjName = "Pig",
             PositionX = 0,
             PositionY = 0,
             ScaleX = gespawnd.transform.localScale.x,

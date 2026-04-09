@@ -13,6 +13,7 @@ public class SpawnYellowScript : MonoBehaviour
         {
             EnvironmentId = WorldManager.Instance.CurrentWorldId,
             PrefabID = prefabID,
+            ObjName = "Yellow",
             PositionX = 0,
             PositionY = 0,
             ScaleX = gespawnd.transform.localScale.x,
