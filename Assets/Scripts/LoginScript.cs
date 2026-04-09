@@ -1,38 +1,58 @@
-using UnityEditor;
+using JetBrains.Annotations;
+using System;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
-public class MyCustomComponent : MonoBehaviour
+public class LoginScript : MonoBehaviour
 {
-    //public string message;
-    //public int myNumber;
-    public GameObject loginObject;
-    public GameObject worldObject;
-    //public Canvas someCanvas;
-    public TMPro.TMP_InputField gebruiker;
-    public TMPro.TMP_InputField wachtwoord;
-    //public TMPro.TMP_Text someTextField;
+    public GameObject InlogScene;
+    public GameObject RegisterScene;
+    public GameObject WereldSelect;
+    public GameObject StartScreen;
+    public TMP_InputField UsernameInput;
+    public TMP_InputField WachtwoordInput;
+    private string UserEmail;
+    private string UserWachtwoord;
+    public UserApiClient UserAPI;
+    public TMP_Text InlogErrorTekst;
 
-    void Start()
+    public void Register()
     {
-        Debug.Log("Hello. I've started!");
+        InlogScene.SetActive(false);
+        RegisterScene.SetActive(true);
     }
 
-    public void DoSomething()
+    public void BackToStartScreen()
     {
-        //Debug.Log(message);
-        //someGameObject.SetActive(false);
+        InlogScene.SetActive(false);
+        StartScreen.SetActive(true);
+    }
 
-        //string inputText = someInputField.text;
-        //someTextField.text = inputText;
+    public async void Login()
+    {
+        UserEmail = UsernameInput.text;
+        UserWachtwoord = WachtwoordInput.text;
 
-        string gebruikerInput = gebruiker.text;
-        string wachtwoordInput = wachtwoord.text;
+        IWebRequestReponse webRequestResponse = await UserAPI.Login(new User { Email = UserEmail, Password = UserWachtwoord });
 
-        if (gebruikerInput == "admin" && wachtwoordInput == "admin")
+        if (webRequestResponse is WebRequestData<string> dataResponse)
         {
-            loginObject.SetActive(false);
-            worldObject.SetActive(true);
+            Debug.Log("Login succes!");
+            InlogScene.SetActive(false);
+            WereldSelect.SetActive(true);
+        }
+        else if (webRequestResponse is WebRequestError errorResponse)
+        {
+            string errorMessage = errorResponse.ErrorMessage;
+            Debug.Log("Login error: " + errorMessage);
+            InlogErrorTekst.gameObject.SetActive(true);
+        }
+        else
+        {
+            throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }
     }
-
 }
