@@ -12,21 +12,21 @@ public class Draggable : MonoBehaviour
     private Camera mainCamera;
     private SpriteRenderer spriteRenderer;
 
-    
+
     private Vector2 StartSlepen;
     private const float dragThreshold = 5f;
     private bool dragDecided = false;
 
-   
+
     public bool isSelected = false;
     private static Draggable huidigGeselecteerd;
 
-   
+
     private const float moveStep = 0.1f;
     private const float rotateStep = 15f;
     private bool needsPositionUpdate = false;
 
-    
+
     private Color defaultColor;
     private static readonly Color selectedColor = new Color(0.5f, 0.8f, 1f);
 
@@ -170,17 +170,24 @@ public class Draggable : MonoBehaviour
     {
         IWebRequestReponse webRequestResponse = await apiClient.CreateObject2D(objectData);
 
-        switch (webRequestResponse)
+        if (webRequestResponse is WebRequestData<Object2D> dataResponse)
         {
-            case WebRequestData<Object2D> dataResponse:
+            // Zorg dat de lokale objectData de door de server gegenereerde velden krijgt
+            if (dataResponse.Data != null)
+            {
+                objectData.Id = dataResponse.Data.Id;
                 objectData.GUID = dataResponse.Data.GUID;
-                break;
-            case WebRequestError errorResponse:
-                string errorMessage = errorResponse.ErrorMessage;
-                Debug.Log("Create object2D error: " + errorMessage);
-                break;
-            default:
-                throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
+                objectData.EnvironmentId = dataResponse.Data.EnvironmentId;
+            }
+        }
+        else if (webRequestResponse is WebRequestError errorResponse)
+        {
+            string errorMessage = errorResponse.ErrorMessage;
+            Debug.Log("Create object2D error: " + errorMessage);
+        }
+        else
+        {
+            throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }
     }
 
@@ -188,17 +195,18 @@ public class Draggable : MonoBehaviour
     {
         IWebRequestReponse webRequestResponse = await apiClient.UpdateObject2D(objectData);
 
-        switch (webRequestResponse)
+        if (webRequestResponse is WebRequestData<string> dataResponse)
         {
-            case WebRequestData<string> dataResponse:
-                Debug.Log("Update object2D success");
-                break;
-            case WebRequestError errorResponse:
-                string errorMessage = errorResponse.ErrorMessage;
-                Debug.Log("Update object2D error: " + errorMessage);
-                break;
-            default:
-                throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
+            Debug.Log("Update object2D success");
+        }
+        else if (webRequestResponse is WebRequestError errorResponse)
+        {
+            string errorMessage = errorResponse.ErrorMessage;
+            Debug.Log("Update object2D error: " + errorMessage);
+        }
+        else
+        {
+            throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }
     }
 
@@ -206,19 +214,27 @@ public class Draggable : MonoBehaviour
     {
         if (objectData == null || apiClient == null) return;
 
-        IWebRequestReponse response = await apiClient.DeleteObject2D(objectData.GUID.ToString());
-
-        switch (response)
+        // Gebruik environmentId + Id (niet GUID.ToString) zodat route overeenkomt met Create/Update
+        if (string.IsNullOrEmpty(objectData.EnvironmentId) || string.IsNullOrEmpty(objectData.Id))
         {
-            case WebRequestData<string> dataResponse:
-                Debug.Log("Delete object2D success");
-                WorldManager.Instance.VerwijderObject(gameObject);
-                break;
-            case WebRequestError errorResponse:
-                Debug.Log("Delete object2D error: " + errorResponse.ErrorMessage);
-                break;
-            default:
-                throw new NotImplementedException("No implementation for webRequestResponse of class: " + response.GetType());
+            Debug.LogWarning("Cannot delete object: missing EnvironmentId or Id.");
+            return;
+        }
+
+        IWebRequestReponse response = await apiClient.DeleteObject2D(objectData.EnvironmentId, objectData.Id);
+
+        if (response is WebRequestData<string> dataResponse)
+        {
+            Debug.Log("Delete object2D success");
+            WorldManager.Instance.VerwijderObject(gameObject);
+        }
+        else if (response is WebRequestError errorResponse)
+        {
+            Debug.Log("Delete object2D error: " + errorResponse.ErrorMessage);
+        }
+        else
+        {
+            throw new NotImplementedException("No implementation for webRequestResponse of class: " + response.GetType());
         }
     }
 }

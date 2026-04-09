@@ -50,21 +50,23 @@ public class WorldManager : MonoBehaviour
 
         IWebRequestReponse response = await object2DApiClient.ReadObject2Ds(environmentId);
 
-        switch (response)
+        if (response is WebRequestData<List<Object2D>> dataResponse)
         {
-            case WebRequestData<List<Object2D>> dataResponse:
-                List<Object2D> object2Ds = dataResponse.Data;
-                Debug.Log($"Succes: {object2Ds.Count} objecten gevonden.");
+            List<Object2D> object2Ds = dataResponse.Data;
+            Debug.Log($"Succes: {object2Ds.Count} objecten gevonden.");
 
-                foreach (Object2D objData in object2Ds)
-                {
-                    PlaatsObjectInScene(objData);
-                }
-                break;
-
-            case WebRequestError errorResponse:
-                Debug.LogError("Fout bij ophalen objecten: " + errorResponse.ErrorMessage);
-                break;
+            foreach (Object2D objData in object2Ds)
+            {
+                PlaatsObjectInScene(objData);
+            }
+        }
+        else if (response is WebRequestError errorResponse)
+        {
+            Debug.LogError("Fout bij ophalen objecten: " + errorResponse.ErrorMessage);
+        }
+        else
+        {
+            throw new NotImplementedException("No implementation for response of class: " + response.GetType());
         }
     }
 
@@ -121,23 +123,23 @@ public class WorldManager : MonoBehaviour
         CurrentWorld.SetActive(false);
     }
     
-    //Verwijderd de huidige wereld uit de DB met alle objecten ebrij
         public async void DeleteEnvironment2D()
     {
         IWebRequestReponse webRequestResponse = await environment2DApiClient.DeleteEnvironment(CurrentWorldId);
 
-        switch (webRequestResponse)
+        if (webRequestResponse is WebRequestData<string> dataResponse)
         {
-            case WebRequestData<string> dataResponse:
-                Debug.Log("Delete environment2D success");
-                backToSelectWorld();
-                break;
-            case WebRequestError errorResponse:
-                string errorMessage = errorResponse.ErrorMessage;
-                Debug.Log("Delete environment2D error: " + errorMessage);
-                break;
-            default:
-                throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
+            Debug.Log("Delete environment2D success");
+            backToSelectWorld();
+        }
+        else if (webRequestResponse is WebRequestError errorResponse)
+        {
+            string errorMessage = errorResponse.ErrorMessage;
+            Debug.Log("Delete environment2D error: " + errorMessage);
+        }
+        else
+        {
+            throw new NotImplementedException("No implementation for webRequestResponse of class: " + webRequestResponse.GetType());
         }
     }
-}    
+}
