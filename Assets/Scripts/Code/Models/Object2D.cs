@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 /**
@@ -8,21 +9,23 @@ using UnityEngine;
 [Serializable]
 public class Object2D
 {
-    public string Id;
+    public Guid ObjGuid { get; set; }
 
-    public string EnvironmentId;
+    public float PrefabId { get; set; }
 
-    public string PrefabId;
+    public float PositionX { get; set; }
 
-    public float PositionX;
+    public float PositionY { get; set; }
 
-    public float PositionY;
+    public float ScaleX { get; set; }
 
-    public float ScaleX;
+    public float ScaleY { get; set; }
 
-    public float ScaleY;
+    public float RotationZ { get; set; }
 
-    public float RotationZ;
+    public int SortingLayer { get; set; }
 
-    public int SortingLayer;
+    public Guid EnvironmentGuid { get; set; }
+
+    public string ObjName { get; set; }
 }

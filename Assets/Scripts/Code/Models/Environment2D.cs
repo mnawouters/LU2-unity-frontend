@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting.Dependencies.Sqlite;
 
 /**
  * Bijzonderheden wegens beperkingen van JsonUtility:
@@ -7,11 +8,13 @@ using System;
 [Serializable]
 public class Environment2D
 {
-    public string Id;
+    public Guid EnvGuid { get; set; }
 
-    public string Name;
+    public string Name { get; set; }
 
-    public int MaxLength;
+    public int MaxHeight { get; set; }
 
-    public int MaxHeight;
+    public int MaxLenght { get; set; }
+
+    public string UserId { get; set; }
 }
