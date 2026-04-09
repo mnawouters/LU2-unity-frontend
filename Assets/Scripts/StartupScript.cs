@@ -1,10 +1,6 @@
-using JetBrains.Annotations;
-using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class StartupScript : MonoBehaviour
 {
