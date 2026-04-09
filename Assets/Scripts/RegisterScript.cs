@@ -1,9 +1,6 @@
-using JetBrains.Annotations;
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class RegisterScript : MonoBehaviour
 {

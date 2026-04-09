@@ -195,7 +195,7 @@ public class Draggable : MonoBehaviour
     {
         IWebRequestReponse webRequestResponse = await apiClient.UpdateObject2D(objectData);
 
-        if (webRequestResponse is WebRequestData<string> dataResponse)
+        if (webRequestResponse is WebRequestData<string>)
         {
             Debug.Log("Update object2D success");
         }
@@ -223,7 +223,7 @@ public class Draggable : MonoBehaviour
 
         IWebRequestReponse response = await apiClient.DeleteObject2D(objectData.EnvironmentId, objectData.Id);
 
-        if (response is WebRequestData<string> dataResponse)
+        if (response is WebRequestData<string>)
         {
             Debug.Log("Delete object2D success");
             WorldManager.Instance.VerwijderObject(gameObject);
